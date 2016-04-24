@@ -1,0 +1,11 @@
+library(rvest)
+library(magrittr)
+library(stringr)
+
+page = read_html("http://www.cbssports.com/collegebasketball/alumni-tracker/school/4832")
+
+df = data.frame(
+  college= page %>% html_nodes("option") %>% html_text(),
+  stringsAsFactors = FALSE) 
+
+df$links = page %>% html_nodes("option") %>% html_attr("value") %>% paste0("www.cbssports.com", .)
