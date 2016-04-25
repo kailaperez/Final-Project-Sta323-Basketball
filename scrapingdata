@@ -6,9 +6,11 @@ library(magrittr)
 library(stringr)
 
 page = read_html("http://www.basketball-reference.com/friv/colleges.cgi?college=nillinois")
-links = page %>% html_nodes("option") %>% html_attr("value") %>% paste0("http://www.basketball-reference.com", .)
 
-df = data.frame(
+links = page %>% html_nodes("option") %>% html_attr("value") %>% paste0("http://www.basketball-reference.com", .)
+subpages = lapply(links, read_html)
+
+get_df = function(page){data.frame(
     player = page %>% html_nodes("td+ td , #stats a") %>% html_nodes("a") %>% html_text(),
     start = page %>% html_nodes("td:nth-child(3)") %>% html_text(),
     end = page %>% html_nodes("td:nth-child(4)") %>% html_text(),
@@ -35,5 +37,7 @@ df = data.frame(
     PTSpg = page %>% html_nodes("td:nth-child(25)") %>% html_text(),
     TRB_pg = page %>% html_nodes("td:nth-child(26)") %>% html_text(),
     AST_pg = page %>% html_nodes("td:nth-child(27)") %>% html_text(),
-   college = c("nillinois", "nillinois", "nillinois", "nillinois", "nillinois", "nillinois")
-)
+    stringsAsFactors = FALSE
+)}
+
+data = lapply(subpages, get_df)
