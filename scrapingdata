@@ -10,7 +10,8 @@ page = read_html("http://www.basketball-reference.com/friv/colleges.cgi?college=
 links = page %>% html_nodes("option") %>% html_attr("value") %>% paste0("http://www.basketball-reference.com", .)
 subpages = lapply(links, read_html)
 
-get_df = function(page){data.frame(
+get_df = function(page){
+data.frame(
     player = page %>% html_nodes("td+ td , #stats a") %>% html_nodes("a") %>% html_text(),
     start = page %>% html_nodes("td:nth-child(3)") %>% html_text(),
     end = page %>% html_nodes("td:nth-child(4)") %>% html_text(),
